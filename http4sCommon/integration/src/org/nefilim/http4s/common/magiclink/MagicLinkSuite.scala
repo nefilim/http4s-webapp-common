@@ -42,7 +42,9 @@ class MagicLinkSuite extends CatsEffectSuite with TestContainerForAll {
         service = MagicLinkService(redisStore, TestIDGenerator(generatedID))
       } yield {
         service.session(uri"/tokenauth", "123")
-      }).allocated.flatMap(_._1.assertEquals(tokenAuthURI()))
+      }).allocated.flatMap { case (io, cancel) =>
+        io.assertEquals(tokenAuthURI()) >> cancel
+      }
     }
   }
 
@@ -58,7 +60,9 @@ class MagicLinkSuite extends CatsEffectSuite with TestContainerForAll {
       } yield {
         service.session(uri"/tokenauth", "123") >>
           service.redeem(Request[IO](uri = tokenAuthURI()))
-      }).allocated.flatMap(_._1.assertEquals(Some("123")))
+      }).allocated.flatMap { case (io, cancel) =>
+        io.assertEquals(Some("123")) >> cancel
+      }
     }
   }
 }
