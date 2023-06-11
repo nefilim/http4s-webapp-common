@@ -3,8 +3,12 @@ import $ivy.`com.lihaoyi::mill-contrib-buildinfo:`
 import mill._
 import mill.define.{Command, Target}
 import mill.scalalib._
+import mill.scalalib.publish._
 import mill.scalalib.scalafmt._
 import $ivy.`com.lihaoyi::mill-contrib-docker:$MILL_VERSION`
+import $ivy.`io.chris-kipp::mill-ci-release::0.1.9`
+import io.kipp.mill.ci.release.CiReleaseModule
+import io.kipp.mill.ci.release.SonatypeHost
 
 import dependencies.Dependencies
 
@@ -12,7 +16,7 @@ private object versions {
   val scala = "2.13.11"
 }
 
-object http4sCommon extends WebCommonBaseModule {
+object http4sCommon extends WebCommonBaseModule with CiReleaseModule {
   override def ivyDeps = super.ivyDeps() ++ Agg(
     Dependencies.circe.core,
     Dependencies.circe.generic,
@@ -34,6 +38,19 @@ object http4sCommon extends WebCommonBaseModule {
     override def ivyDeps = super.ivyDeps() ++ Agg(
       Dependencies.test.munit,
       Dependencies.logback.classic,
+    )
+  }
+
+  override def sonatypeHost = Some(SonatypeHost.s01)
+
+  def pomSettings = T {
+    PomSettings(
+      description = "Simple library providing some common functionality needed for developing http4s based web applications",
+      organization = "io.github.nefilim.http4s.common",
+      url = "https://github.com/nefilim/http4s-webapp-common",
+      licenses = Seq(License.`Apache-2.0`),
+      versionControl = VersionControl.github("nefilim", "mill-git-semver"),
+      developers = Seq(Developer("nefilim", "Peter vR", "https.//github.com/nefilim"))
     )
   }
 }
