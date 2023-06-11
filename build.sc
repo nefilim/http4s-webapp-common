@@ -16,7 +16,7 @@ private object versions {
   val scala = "2.13.11"
 }
 
-object http4sCommon extends WebCommonBaseModule with CiReleaseModule {
+object `http4s-common` extends WebCommonBaseModule with CiReleaseModule {
   override def ivyDeps = super.ivyDeps() ++ Agg(
     Dependencies.circe.core,
     Dependencies.circe.generic,
@@ -46,7 +46,7 @@ object http4sCommon extends WebCommonBaseModule with CiReleaseModule {
   def pomSettings = T {
     PomSettings(
       description = "Simple library providing some common functionality needed for developing http4s based web applications",
-      organization = "io.github.nefilim.http4s.common",
+      organization = "io.github.nefilim.http4s",
       url = "https://github.com/nefilim/http4s-webapp-common",
       licenses = Seq(License.`Apache-2.0`),
       versionControl = VersionControl.github("nefilim", "mill-git-semver"),
