@@ -5,15 +5,6 @@ object Dependencies {
   object plugins {
     val betterMonadicFor = ivy"com.olegpy::better-monadic-for:0.3.1"
     val kindProjector = ivy"org.typelevel:::kind-projector:0.13.2"
-    val semanticDBScalaC = ivy"org.scalameta:::semanticdb-scalac:4.5.13"
-  }
-
-  object mill {
-    object scalafix {
-      private val organizeImportsVersion = "0.6.0"
-
-      val organizeImports = ivy"com.github.liancheng::organize-imports:$organizeImportsVersion"
-    }
   }
 
   object test {

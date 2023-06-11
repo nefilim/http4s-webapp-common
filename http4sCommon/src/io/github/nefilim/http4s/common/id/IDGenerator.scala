@@ -1,4 +1,4 @@
-package org.nefilim.http4s.common.id
+package io.github.nefilim.http4s.common.id
 
 import cats.Monad
 import cats.syntax.all.*

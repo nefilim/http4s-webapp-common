@@ -1,4 +1,4 @@
-package org.nefilim.http4s.common.tokenstore.redis
+package io.github.nefilim.http4s.common.tokenstore.redis
 
 import cats.Monad
 import cats.effect.{Async, Resource}
@@ -11,9 +11,10 @@ import dev.profunktor.redis4cats.log4cats.log4CatsInstance
 import dev.profunktor.redis4cats.{Redis, RedisCommands}
 import io.circe.{Decoder, Encoder}
 import io.circe.parser.decode
+import io.github.nefilim.http4s.common.tokenstore.TokenStore
 import io.lettuce.core.{ClientOptions, TimeoutOptions}
-import org.nefilim.http4s.common.tokenstore.TokenStore
-import org.nefilim.http4s.common.tokenstore.redis.RedisTokenStore.Config
+import io.github.nefilim.http4s.common.tokenstore.TokenStore
+import io.github.nefilim.http4s.common.tokenstore.redis.RedisTokenStore.Config
 import org.typelevel.log4cats.Logger
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
@@ -70,10 +71,10 @@ object RedisTokenStore {
     config: Config[K]
   )(implicit decoder: Decoder[V], encoder: Encoder[V]): RedisCodec[K, V] = {
     val totalKeySplitEpi = {
-      config.keyPrefix.fold(config.keySplitEpi) { kp: String =>
+      config.keyPrefix.fold(config.keySplitEpi) { (kp: String) =>
         config.keySplitEpi.copy(
-          get = { a: String => config.keySplitEpi.get(a.stripPrefix(s"$kp#")) },
-          reverseGet = { b: K => s"$kp#${config.keySplitEpi.reverseGet(b)}" }
+          get = { (a: String) => config.keySplitEpi.get(a.stripPrefix(s"$kp#")) },
+          reverseGet = { (b: K) => s"$kp#${config.keySplitEpi.reverseGet(b)}" }
         )
       }
     }

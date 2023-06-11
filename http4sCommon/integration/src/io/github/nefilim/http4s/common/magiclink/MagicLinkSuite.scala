@@ -1,4 +1,4 @@
-package org.nefilim.http4s.common.magiclink
+package io.github.nefilim.http4s.common.magiclink
 
 import cats.effect.IO
 import cats.effect.kernel.Resource
@@ -8,8 +8,8 @@ import dev.profunktor.redis4cats.data
 import munit.CatsEffectSuite
 import org.http4s.{Request, Uri}
 import org.http4s.implicits.http4sLiteralsSyntax
-import org.nefilim.http4s.common.id.IDGenerator
-import org.nefilim.http4s.common.tokenstore.redis.RedisTokenStore
+import io.github.nefilim.http4s.common.id.IDGenerator
+import io.github.nefilim.http4s.common.tokenstore.redis.RedisTokenStore
 import org.testcontainers.containers.wait.strategy.Wait
 import org.typelevel.log4cats.Logger
 import org.typelevel.log4cats.slf4j.Slf4jLogger

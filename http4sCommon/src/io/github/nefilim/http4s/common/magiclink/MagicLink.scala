@@ -1,4 +1,4 @@
- package org.nefilim.http4s.common.magiclink
+ package io.github.nefilim.http4s.common.magiclink
 
 import cats.data.OptionT
 import cats.effect.*
@@ -7,12 +7,14 @@ import ciris.{ConfigValue, env}
 import dev.profunktor.redis4cats.codecs.splits.SplitEpi
 import dev.profunktor.redis4cats.data.RedisCodec
 import io.circe.{Decoder, Encoder}
+import io.github.nefilim.http4s.common.id.IDGenerator
+import io.github.nefilim.http4s.common.tokenstore.redis.RedisTokenStore.Config
 import io.lettuce.core.ClientOptions
 import org.http4s.{Request, Uri}
-import org.nefilim.http4s.common.id.IDGenerator
-import org.nefilim.http4s.common.magiclink.MagicLinkService.MagicLinkTokenID
-import org.nefilim.http4s.common.tokenstore.TokenStore
-import org.nefilim.http4s.common.tokenstore.redis.RedisTokenStore
+import io.github.nefilim.http4s.common.id.IDGenerator
+import io.github.nefilim.http4s.common.magiclink.MagicLinkService.MagicLinkTokenID
+import io.github.nefilim.http4s.common.tokenstore.TokenStore
+import io.github.nefilim.http4s.common.tokenstore.redis.RedisTokenStore
 import org.typelevel.log4cats.Logger
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
@@ -53,8 +55,8 @@ trait MagicLinkStore[F[_], T] extends TokenStore[F, MagicLinkTokenID, T]
 
 object RedisMagicLinkStore {
   def apply[F[_]: Async : Logger, T](
-    config: RedisTokenStore.Config[MagicLinkTokenID],
-    clientOptions: ClientOptions = RedisTokenStore.defaultClientOptions,
+                                      config: Config[MagicLinkTokenID],
+                                      clientOptions: ClientOptions = RedisTokenStore.defaultClientOptions,
   )(implicit codec: RedisCodec[MagicLinkTokenID, T]): Resource[F, MagicLinkStore[F, T]] = {
     RedisTokenStore[F, MagicLinkTokenID, T](config, clientOptions).map { s =>
       new MagicLinkStore[F, T] {

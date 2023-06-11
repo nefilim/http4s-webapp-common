@@ -1,9 +1,7 @@
 import $file._mill.dependencies
 import $ivy.`com.lihaoyi::mill-contrib-buildinfo:`
-import $ivy.`com.goyeau::mill-scalafix::0.2.9`
-import com.goyeau.mill.scalafix.ScalafixModule
 import mill._
-import mill.define.{Task, Input, Command, Sources}
+import mill.define.{Command, Target}
 import mill.scalalib._
 import mill.scalalib.scalafmt._
 import $ivy.`com.lihaoyi::mill-contrib-docker:$MILL_VERSION`
@@ -11,7 +9,7 @@ import $ivy.`com.lihaoyi::mill-contrib-docker:$MILL_VERSION`
 import dependencies.Dependencies
 
 private object versions {
-  val scala = "2.13.10"
+  val scala = "2.13.11"
 }
 
 object http4sCommon extends WebCommonBaseModule {
@@ -40,7 +38,7 @@ object http4sCommon extends WebCommonBaseModule {
   }
 }
 
-trait WebCommonBaseModule extends ScalaModule with ScalafmtModule with ScalafixModule { base =>
+trait WebCommonBaseModule extends ScalaModule with ScalafmtModule { base =>
   override def scalaVersion: T[String] = versions.scala
 
   override def ivyDeps: T[Agg[Dep]] = super.ivyDeps() ++ Agg(
@@ -48,7 +46,6 @@ trait WebCommonBaseModule extends ScalaModule with ScalafmtModule with ScalafixM
     Dependencies.cats.core,
     Dependencies.cats.effect,
   )
-  override def scalafixIvyDeps: T[Agg[Dep]] = super.scalafixIvyDeps()
 
   override def scalacOptions: T[Seq[String]] = super.scalacOptions() ++ Seq(
     "-encoding", "utf8",                 // Specify character encoding used by source files.
@@ -105,13 +102,10 @@ trait WebCommonBaseModule extends ScalaModule with ScalafmtModule with ScalafixM
   override def scalacPluginIvyDeps: T[Agg[Dep]] = super.scalacPluginIvyDeps() ++ Agg(
     Dependencies.plugins.betterMonadicFor,
     Dependencies.plugins.kindProjector,
-    // DESNOTE(peter, 9/23/22) mill or something seems to add this plugin by default but an older version
-    // no longer available for the current scalac version, hence adding explicitly to supersede
-    Dependencies.plugins.semanticDBScalaC,
   )
 
-  trait WebCommonTestModule extends Tests with TestModule.Munit with ScalafmtModule with ScalafixModule {
-    override def resources: Sources = T.sources {
+  trait WebCommonTestModule extends ScalaTests with TestModule.Munit with ScalafmtModule {
+    override def resources = T.sources {
       super.resources() :+ PathRef(T.workspace / "shared" / "logging")
     }
 
@@ -121,7 +115,6 @@ trait WebCommonBaseModule extends ScalaModule with ScalafmtModule with ScalafixM
       Dependencies.logback.classic,
       Dependencies.cats.log4CatsNoop
     )
-    override def scalafixIvyDeps: T[Agg[Dep]] = super.scalafixIvyDeps() ++ Agg(Dependencies.mill.scalafix.organizeImports)
   }
 
   trait WebCommonIntegrationTestModule extends WebCommonTestModule {
@@ -137,10 +130,10 @@ private def gitSha(short: Boolean): Command[String] = T.command {
   os.proc(args).call().out.text().trim
 }
 
-private def isCI: Input[Boolean] = T.input {
-  T.ctx.env.get("CI").exists(ci => "true".equals(ci.toLowerCase))
+private def isCI: Target[Boolean] = T.input {
+  T.ctx().env.get("CI").exists(ci => "true".equals(ci.toLowerCase))
 }
 
-private def withFatalWarns: Input[Boolean] = T.input {
-  T.ctx.env.get("FATAL_WARNINGS").exists(ci => "true".equals(ci.toLowerCase))
+private def withFatalWarns: Target[Boolean] = T.input {
+  T.ctx().env.get("FATAL_WARNINGS").exists(ci => "true".equals(ci.toLowerCase))
 }
