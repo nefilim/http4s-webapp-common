@@ -8,13 +8,12 @@ import dev.profunktor.redis4cats.codecs.splits.SplitEpi
 import dev.profunktor.redis4cats.data.RedisCodec
 import io.circe.{Decoder, Encoder}
 import io.github.nefilim.http4s.common.id.IDGenerator
-import io.github.nefilim.http4s.common.tokenstore.redis.RedisTokenStore.Config
-import io.lettuce.core.ClientOptions
-import org.http4s.{Request, Uri}
-import io.github.nefilim.http4s.common.id.IDGenerator
 import io.github.nefilim.http4s.common.magiclink.MagicLinkService.MagicLinkTokenID
 import io.github.nefilim.http4s.common.tokenstore.TokenStore
 import io.github.nefilim.http4s.common.tokenstore.redis.RedisTokenStore
+import io.github.nefilim.http4s.common.tokenstore.redis.RedisTokenStore.Config
+import io.lettuce.core.ClientOptions
+import org.http4s.{Request, Uri}
 import org.typelevel.log4cats.Logger
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}

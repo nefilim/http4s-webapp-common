@@ -9,12 +9,11 @@ import dev.profunktor.redis4cats.codecs.splits.SplitEpi
 import dev.profunktor.redis4cats.data.RedisCodec
 import dev.profunktor.redis4cats.log4cats.log4CatsInstance
 import dev.profunktor.redis4cats.{Redis, RedisCommands}
-import io.circe.{Decoder, Encoder}
 import io.circe.parser.decode
-import io.github.nefilim.http4s.common.tokenstore.TokenStore
-import io.lettuce.core.{ClientOptions, TimeoutOptions}
+import io.circe.{Decoder, Encoder}
 import io.github.nefilim.http4s.common.tokenstore.TokenStore
 import io.github.nefilim.http4s.common.tokenstore.redis.RedisTokenStore.Config
+import io.lettuce.core.{ClientOptions, TimeoutOptions}
 import org.typelevel.log4cats.Logger
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
